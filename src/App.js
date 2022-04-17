@@ -1,24 +1,42 @@
-import logo from './logo.svg';
+import { Container, AppBar, Typography, Grow, Grid } from '@material-ui/core'
+import React, { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
+
+import { getPosts } from './actions/posts'
+
 import './App.css';
+import memories from './images/memories.png'
+import Posts from './components/Posts/Posts'
+import Form from './components/Form/Form'
+import useStyles from './styles'
+
+
 
 function App() {
+  const classes = useStyles();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getPosts())
+  }, [dispatch])
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container maxWidth="lg">
+      <AppBar className={classes.appBar} position="static" color="inherit">
+        <Typography className={classes.heading} variant="h2" align="center" >Memories
+          <img className={classes.image} src={memories} alt="memories" height="60" />
+        </Typography>
+      </AppBar>
+      <Grow in>
+        <Grid container justifyContent="space-between" alignItems="stretch" spacing={3}>
+          <Grid item xs={12} sm={7} >
+            <Posts />
+          </Grid>
+          <Grid item xs={12} sm={4} >
+            <Form />
+          </Grid>
+        </Grid>
+      </Grow>
+    </Container>
   );
 }
 
