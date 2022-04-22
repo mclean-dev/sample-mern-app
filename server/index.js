@@ -4,7 +4,10 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 
 import postRoutes from './routes/posts.js'
+import process from 'process'
+import dotenv from 'dotenv'
 
+dotenv.config()
 const app = express()
 
 
