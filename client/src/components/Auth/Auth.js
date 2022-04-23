@@ -35,7 +35,7 @@ const Auth = () => {
   const handleShowPassword = () => setShowPassword((prevShowPassword) => !prevShowPassword)
   const switchMode = () => {
     setIsSignup((prevIsSignup) => !prevIsSignup)
-    handleShowPassword(false)
+    setShowPassword(false)
   }
   const googleSuccess = async (res) => {
     console.log("Google Sign In was successful.")
