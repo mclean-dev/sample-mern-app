@@ -5,9 +5,42 @@ import PostMessage from "../models/postMessage.js"
 const { restart } = pkg;
  
 export const getPosts = async (req, res) => {
+    const { page } = req.query
     try {
-        const postMessages = await PostMessage.find()
-        res.status(200).json(postMessages)
+        const LIMIT = 8;
+        const startIndex = (Number(page) - 1) * LIMIT; // get the starting index of every page
+        const total = await PostMessage.countDocuments({})
+        const posts = await PostMessage.find().sort({_id: -1}).limit(LIMIT).skip(startIndex)
+        console.log(posts)
+        res.status(200).json({ data: posts, currentPage: Number(page), numberOfPages: Math.ceil(total / LIMIT)})
+    } catch (error) {
+        res.status(404).json({ message: error.message })
+    }
+}
+
+export const getPost = async (req, res) => {
+    const { id: _id } = req.params;
+    console.log('getPost ')
+    try {
+        if(!mongoose.Types.ObjectId.isValid(_id)) return res.status(404).send('No post with that id')
+        const post = await PostMessage.findById(_id)
+        console.log(post)
+        res.status(200).json(post)
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const getPostsBySearch = async (req, res) => {
+    console.log(req.query)
+    console.log('search post')
+    const { searchQuery, tags } = req.query
+    try {
+        const title = new RegExp(searchQuery, 'i')
+        const posts = await PostMessage.find({$or: [{title}, {tags: {$in: tags.split(',')}}]})
+        console.log(posts)
+        res.json({data: posts})
+
     } catch (error) {
         res.status(404).json({ message: error.message })
     }

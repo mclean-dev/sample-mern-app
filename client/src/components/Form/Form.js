@@ -3,12 +3,13 @@ import { TextField, Button, Typography, Paper } from '@material-ui/core'
 import FileBase from 'react-file-base64'
 import useStyles from './styles'
 import { useDispatch, useSelector } from 'react-redux'
-
+import { useHistory } from 'react-router-dom'
 
 import { createPost, updatePost } from '../../actions/posts'
 
 const Form = ({ currentId, setCurrentId }) => {
     const classes = useStyles();
+    const history = useHistory();
     const post = useSelector((state) => currentId ? state.posts.find((p) => p._id === currentId) : null )
     const dispatch = useDispatch();
     const [postData, setPostData] = useState({title: '', message: '', tags: '', selectedFile: '' })
@@ -22,7 +23,7 @@ const Form = ({ currentId, setCurrentId }) => {
         if(currentId) {
             dispatch(updatePost(currentId, {...postData, name: user?.result?.name}))
         } else {
-        dispatch(createPost({...postData, name: user?.result?.name}))
+        dispatch(createPost({...postData, name: user?.result?.name}, history))
         }
         clear();
     }
@@ -41,7 +42,7 @@ const Form = ({ currentId, setCurrentId }) => {
         )
     }
     return (
-        <Paper className={classes.paper}>
+        <Paper className={classes.paper} elevation={6}>
             <form autoComplete="off" noValidate className={`${classes.root} ${classes.form}`} onSubmit={handleSubmit} >
                 <Typography variant="h6">{currentId ? 'Editing' : 'Creating'} a Memory</Typography>
                 <TextField name="title" variant="outlined" label="Title" fullWidth value={postData.title} onChange={(e) => setPostData({ ...postData, title: e.target.value })} />
