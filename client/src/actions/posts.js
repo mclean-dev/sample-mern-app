@@ -1,4 +1,4 @@
-import { FETCH_ALL, FETCH_POST, CREATE, UPDATE, DELETE, FETCH_BY_SEARCH, START_LOADING, END_LOADING } from '../constants/actionTypes'
+import { FETCH_ALL, FETCH_POST, CREATE, UPDATE, COMMENT, DELETE, FETCH_BY_SEARCH, START_LOADING, END_LOADING } from '../constants/actionTypes'
 import * as api from '../api'
 
 // Action Creators
@@ -76,6 +76,16 @@ export const likePost = (id) => async (dispatch) => {
     try {
         const { data } = await api.likePost(id)
         dispatch({ type: UPDATE, payload: data })
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const commentPost = (value, id) => async (dispatch) => {
+    try {
+       const { data } = await api.commentPost(value, id)
+       dispatch({ type: COMMENT, payload: data})
+       return data.comments
     } catch (error) {
         console.log(error)
     }
